@@ -295,6 +295,7 @@ function USMap({ guesses, answer, reveal }: { guesses: Guess[]; answer?: Uni; re
 // ---------- Guess Input (simple alphabetical filter) ----------
 function GuessInput({ list, onSelect }: { list: Uni[]; onSelect: (u: Uni) => void }) {
   const [q, setQ] = useState("");
+  const [focused, setFocused] = useState(false);
   const qn = normalize(q);
 
   // Build a prepared, sorted list once when `list` changes.
@@ -304,7 +305,6 @@ function GuessInput({ list, onSelect }: { list: Uni[]; onSelect: (u: Uni) => voi
         const label = (u?.name ?? "").toString();
         if (!label) return null;
         const norm = normalize(label);
-        // stable unique-ish key: prefer id; fall back to name+city+state
         const key =
           String(u.id ?? "") +
           "|" +
@@ -317,7 +317,6 @@ function GuessInput({ list, onSelect }: { list: Uni[]; onSelect: (u: Uni) => voi
       })
       .filter(Boolean) as Array<{ u: Uni; label: string; norm: string; key: string }>;
 
-    // Sort alphabetically once
     arr.sort((a, b) => a.label.localeCompare(b.label));
     return arr;
   }, [list]);
@@ -330,7 +329,7 @@ function GuessInput({ list, onSelect }: { list: Uni[]; onSelect: (u: Uni) => voi
     for (const row of prepared) {
       if (row.norm.startsWith(qn)) starts.push(row);
       else if (row.norm.includes(qn)) includes.push(row);
-      if (starts.length + includes.length >= 200) break; // cap
+      if (starts.length + includes.length >= 200) break;
     }
     return starts.concat(includes).slice(0, 200);
   }, [prepared, qn]);
@@ -342,38 +341,44 @@ function GuessInput({ list, onSelect }: { list: Uni[]; onSelect: (u: Uni) => voi
         placeholder="Type a university…"
         value={q}
         onChange={(e) => setQ(e.target.value)}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setTimeout(() => setFocused(false), 150)} // Delay prevents click flicker
         onKeyDown={(e) => {
           if (e.key === "Enter" && filtered[0]) {
             onSelect(filtered[0].u);
             setQ("");
+            setFocused(false);
           }
         }}
       />
 
-      {/* Dropdown should float on top of other content */}
-      <div className="absolute left-0 right-0 mt-1 max-h-64 overflow-auto rounded-xl border bg-white shadow-lg">
-        {filtered.map(({ u, label, key }) => (
-          <button
-            key={key}
-            className="w-full text-left px-3 py-2 hover:bg-gray-100"
-            onMouseDown={(e) => e.preventDefault()} // keep focus
-            onClick={() => {
-              onSelect(u);
-              setQ("");
-            }}
-          >
-            {label}
-            {u.state ? (
-              <span className="text-gray-500">{` — ${u.city ?? ""}${
-                u.city ? ", " : ""
-              }${u.state}`}</span>
-            ) : null}
-          </button>
-        ))}
-        {filtered.length === 0 && (
-          <div className="px-3 py-2 text-gray-500">No matches</div>
-        )}
-      </div>
+      {/* ✅ Conditionally render dropdown only when focused & query not empty */}
+      {focused && q && (
+        <div className="absolute left-0 right-0 mt-1 max-h-64 overflow-auto rounded-xl border bg-white shadow-lg z-50">
+          {filtered.map(({ u, label, key }) => (
+            <button
+              key={key}
+              className="w-full text-left px-3 py-2 hover:bg-gray-100"
+              onMouseDown={(e) => e.preventDefault()} // prevent losing focus before click
+              onClick={() => {
+                onSelect(u);
+                setQ("");
+                setFocused(false);
+              }}
+            >
+              {label}
+              {u.state && (
+                <span className="text-gray-500">{` — ${u.city ?? ""}${
+                  u.city ? ", " : ""
+                }${u.state}`}</span>
+              )}
+            </button>
+          ))}
+          {filtered.length === 0 && (
+            <div className="px-3 py-2 text-gray-500">No matches</div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
