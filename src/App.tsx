@@ -100,15 +100,15 @@ function pickHint(stats: Record<string, string>, used: string[]) {
   return { key, value: stats[key] };
 }
 
-// function dailySeedIndex(len: number) {
-//   // Deterministic by local date (YYYYMMDD)
-//   const now = new Date();
-//   const y = now.getFullYear();
-//   const m = now.getMonth() + 1;
-//   const d = now.getDate();
-//   const seed = Number(`${y}${String(m).padStart(2, "0")}${String(d).padStart(2, "0")}`);
-//   return len ? seed % len : 0;
-// }
+function dailySeedIndex(len: number) {
+  // Deterministic by local date (YYYYMMDD)
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = now.getMonth() + 1;
+  const d = now.getDate();
+  const seed = Number(`${y}${String(m).padStart(2, "0")}${String(d).padStart(2, "0")}`);
+  return len ? seed % len : 0;
+}
 
 export function useUniversities() {
   const [universities, setUniversities] = useState<Uni[]>([]);

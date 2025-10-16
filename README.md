@@ -1,73 +1,37 @@
-# React + TypeScript + Vite
+# 🎓 Universle
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Universle** is a geography-style guessing game for universities — inspired by *Collegedle* and *Tradle*, but built around U.S. colleges and universities.  
+Each day (or page reload, in dev mode), a random university is chosen. Your goal is to guess which one it is using location, distance, and hints.
 
-Currently, two official plugins are available:
+<!-- ![Universle Screenshot](public/preview.png) -->
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## 🚀 Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- 🌎 **Interactive Leaflet map** with colored markers based on guess proximity  
+- 🎨 **Tailwind CSS** styling for a clean modern UI  
+- ⚡ **React + Vite** frontend for fast reloads and builds  
+- 🔍 **Autocomplete search** with alphabetical filtering  
+- 💡 **Dynamic hints** (motto, founding year, mascot, etc.)  
+- 🧭 **Distance + direction feedback** using haversine and compass bearing  
+- 📊 **Daily or random seed logic** for replayability  
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🛠️ Tech Stack
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+| Technology | Purpose |
+|-------------|----------|
+| **React** | Core framework |
+| **Vite** | Fast build & dev server |
+| **Tailwind CSS** | Styling |
+| **Leaflet** | Interactive map |
+| **TypeScript** | Type safety |
+| **Vercel** | Deployment & hosting |
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+--
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 📜 License
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+MIT License — do whatever you want, just credit if you fork or use it.
